@@ -1,0 +1,20 @@
+{
+  "paroquias": [
+    {
+      "id": 1,
+      "nome": "São Pedro",
+      "endereco": {
+        "cidade": "Franca",
+        "uf": "SP"
+      }
+    },
+    {
+      "id": 2,
+      "nome": "Catedral",
+      "endereco": {
+        "cidade": "Franca",
+        "uf": "SP"
+      }
+    }
+  ]
+}
