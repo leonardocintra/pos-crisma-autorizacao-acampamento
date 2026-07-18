@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -74,6 +75,16 @@ function useNumericInput(initial = "", maxLength = 11) {
 export function FormularioAutorizacao() {
   const cpfResponsavel = useNumericInput();
   const cpfJovem = useNumericInput();
+
+  const [planoSaude, setPlanoSaude] = React.useState(false);
+  const [problemaSaude, setProblemaSaude] = React.useState(false);
+  const [tratamento, setTratamento] = React.useState(false);
+  const [convulsao, setConvulsao] = React.useState(false);
+  const [vacinaTetanica, setVacinaTetanica] = React.useState(false);
+  const [alergia, setAlergia] = React.useState(false);
+  const [restricaoAlimentar, setRestricaoAlimentar] = React.useState(false);
+  const [diabetico, setDiabetico] = React.useState(false);
+  const [usoInsulina, setUsoInsulina] = React.useState(false);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -313,6 +324,233 @@ export function FormularioAutorizacao() {
                 </FieldDescription>
               </Field>
             </div>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Dados de Saúde</CardTitle>
+          <CardDescription>
+            Informações sobre a saúde do jovem para fins de cuidado durante a atividade.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="plano-saude">
+                  Possui algum plano ou convênio médico?
+                </FieldLabel>
+                <Switch
+                  id="plano-saude"
+                  name="planoSaude"
+                  checked={planoSaude}
+                  onCheckedChange={setPlanoSaude}
+                />
+              </div>
+            </Field>
+            {planoSaude && (
+              <Field>
+                <FieldLabel htmlFor="plano-saude-qual">Qual?</FieldLabel>
+                <Input
+                  id="plano-saude-qual"
+                  name="planoSaudeQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="problema-saude">
+                  Possui algum problema de saúde?
+                </FieldLabel>
+                <Switch
+                  id="problema-saude"
+                  name="problemaSaude"
+                  checked={problemaSaude}
+                  onCheckedChange={setProblemaSaude}
+                />
+              </div>
+            </Field>
+            {problemaSaude && (
+              <Field>
+                <FieldLabel htmlFor="problema-saude-qual">Qual?</FieldLabel>
+                <Input
+                  id="problema-saude-qual"
+                  name="problemaSaudeQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="tratamento">
+                  Está realizando algum tratamento?
+                </FieldLabel>
+                <Switch
+                  id="tratamento"
+                  name="tratamento"
+                  checked={tratamento}
+                  onCheckedChange={setTratamento}
+                />
+              </div>
+            </Field>
+            {tratamento && (
+              <Field>
+                <FieldLabel htmlFor="tratamento-qual">Qual?</FieldLabel>
+                <Input
+                  id="tratamento-qual"
+                  name="tratamentoQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="convulsao">
+                  É propenso a convulsão?
+                </FieldLabel>
+                <Switch
+                  id="convulsao"
+                  name="convulsao"
+                  checked={convulsao}
+                  onCheckedChange={setConvulsao}
+                />
+              </div>
+            </Field>
+            {convulsao && (
+              <Field>
+                <FieldLabel htmlFor="convulsao-situacao">
+                  Em que situação?
+                </FieldLabel>
+                <Input
+                  id="convulsao-situacao"
+                  name="convulsaoSituacao"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="vacina-tetanica">
+                  Já tomou vacina anti-tetânica?
+                </FieldLabel>
+                <Switch
+                  id="vacina-tetanica"
+                  name="vacinaTetanica"
+                  checked={vacinaTetanica}
+                  onCheckedChange={setVacinaTetanica}
+                />
+              </div>
+            </Field>
+            {vacinaTetanica && (
+              <Field>
+                <FieldLabel htmlFor="vacina-tetanica-quando">
+                  Quando?
+                </FieldLabel>
+                <Input
+                  id="vacina-tetanica-quando"
+                  name="vacinaTetanicaQuando"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="alergia">
+                  Apresenta alguma alergia?
+                </FieldLabel>
+                <Switch
+                  id="alergia"
+                  name="alergia"
+                  checked={alergia}
+                  onCheckedChange={setAlergia}
+                />
+              </div>
+            </Field>
+            {alergia && (
+              <Field>
+                <FieldLabel htmlFor="alergia-qual">Qual?</FieldLabel>
+                <Input
+                  id="alergia-qual"
+                  name="alergiaQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="restricao-alimentar">
+                  Apresenta alguma restrição alimentar?
+                </FieldLabel>
+                <Switch
+                  id="restricao-alimentar"
+                  name="restricaoAlimentar"
+                  checked={restricaoAlimentar}
+                  onCheckedChange={setRestricaoAlimentar}
+                />
+              </div>
+            </Field>
+            {restricaoAlimentar && (
+              <Field>
+                <FieldLabel htmlFor="restricao-alimentar-qual">
+                  Qual?
+                </FieldLabel>
+                <Input
+                  id="restricao-alimentar-qual"
+                  name="restricaoAlimentarQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="diabetico">É diabético?</FieldLabel>
+                <Switch
+                  id="diabetico"
+                  name="diabetico"
+                  checked={diabetico}
+                  onCheckedChange={setDiabetico}
+                />
+              </div>
+            </Field>
+            {diabetico && (
+              <>
+                <Field>
+                  <div className="flex items-center justify-between">
+                    <FieldLabel htmlFor="uso-insulina">
+                      Se sim, faz uso de insulina?
+                    </FieldLabel>
+                    <Switch
+                      id="uso-insulina"
+                      name="usoInsulina"
+                      checked={usoInsulina}
+                      onCheckedChange={setUsoInsulina}
+                    />
+                  </div>
+                </Field>
+                {usoInsulina && (
+                  <Field>
+                    <FieldLabel htmlFor="frequencia-insulina">
+                      Com qual frequência?
+                    </FieldLabel>
+                    <Input
+                      id="frequencia-insulina"
+                      name="frequenciaInsulina"
+                      autoComplete="off"
+                    />
+                  </Field>
+                )}
+              </>
+            )}
           </FieldGroup>
         </CardContent>
       </Card>
