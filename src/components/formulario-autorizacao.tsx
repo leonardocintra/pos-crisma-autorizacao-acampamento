@@ -85,6 +85,31 @@ export function FormularioAutorizacao() {
   const [restricaoAlimentar, setRestricaoAlimentar] = React.useState(false);
   const [diabetico, setDiabetico] = React.useState(false);
   const [usoInsulina, setUsoInsulina] = React.useState(false);
+  const [tratamentoMedico, setTratamentoMedico] = React.useState(false);
+  const [remedios, setRemedios] = React.useState<
+    { id: number; nome: string; dose: string; horario: string }[]
+  >([]);
+
+  function adicionarRemedio() {
+    setRemedios((prev) => [
+      ...prev,
+      { id: Date.now(), nome: "", dose: "", horario: "" },
+    ]);
+  }
+
+  function removerRemedio(id: number) {
+    setRemedios((prev) => prev.filter((r) => r.id !== id));
+  }
+
+  function atualizarRemedio(
+    id: number,
+    campo: "nome" | "dose" | "horario",
+    valor: string,
+  ) {
+    setRemedios((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, [campo]: valor } : r)),
+    );
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -572,6 +597,112 @@ export function FormularioAutorizacao() {
                 </SelectContent>
               </Select>
             </Field>
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="tratamento-medico">
+                  Está em tratamento médico?
+                </FieldLabel>
+                <Switch
+                  id="tratamento-medico"
+                  name="tratamentoMedico"
+                  checked={tratamentoMedico}
+                  onCheckedChange={setTratamentoMedico}
+                />
+              </div>
+            </Field>
+
+            {tratamentoMedico && (
+              <>
+                {remedios.map((remedio, index) => (
+                  <div
+                    key={remedio.id}
+                    className="flex flex-col gap-4 rounded-md border p-4"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        Remédio {index + 1}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removerRemedio(remedio.id)}
+                      >
+                        Remover
+                      </Button>
+                    </div>
+                    <FieldGroup>
+                      <Field>
+                        <FieldLabel htmlFor={`remedio-nome-${remedio.id}`}>
+                          Nome do remédio
+                        </FieldLabel>
+                        <Input
+                          id={`remedio-nome-${remedio.id}`}
+                          name={`remedioNome-${remedio.id}`}
+                          autoComplete="off"
+                          value={remedio.nome}
+                          onChange={(e) =>
+                            atualizarRemedio(
+                              remedio.id,
+                              "nome",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </Field>
+                      <div className="grid gap-6 sm:grid-cols-2">
+                        <Field>
+                          <FieldLabel htmlFor={`remedio-dose-${remedio.id}`}>
+                            Dose
+                          </FieldLabel>
+                          <Input
+                            id={`remedio-dose-${remedio.id}`}
+                            name={`remedioDose-${remedio.id}`}
+                            placeholder="Ex: 500mg"
+                            autoComplete="off"
+                            value={remedio.dose}
+                            onChange={(e) =>
+                              atualizarRemedio(
+                                remedio.id,
+                                "dose",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Field>
+                        <Field>
+                          <FieldLabel htmlFor={`remedio-horario-${remedio.id}`}>
+                            Horário
+                          </FieldLabel>
+                          <Input
+                            id={`remedio-horario-${remedio.id}`}
+                            name={`remedioHorario-${remedio.id}`}
+                            placeholder="Ex: 8h, 14h, 20h"
+                            autoComplete="off"
+                            value={remedio.horario}
+                            onChange={(e) =>
+                              atualizarRemedio(
+                                remedio.id,
+                                "horario",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Field>
+                      </div>
+                    </FieldGroup>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={adicionarRemedio}
+                >
+                  Adicionar outro remédio
+                </Button>
+              </>
+            )}
           </FieldGroup>
         </CardContent>
       </Card>
