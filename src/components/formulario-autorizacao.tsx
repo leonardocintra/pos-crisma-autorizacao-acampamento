@@ -551,6 +551,27 @@ export function FormularioAutorizacao() {
                 )}
               </>
             )}
+
+            <Field>
+              <FieldLabel htmlFor="tipo-sanguineo">Tipo sanguíneo</FieldLabel>
+              <Select name="tipoSanguineo">
+                <SelectTrigger id="tipo-sanguineo" className="w-full">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="A+">A+</SelectItem>
+                    <SelectItem value="A-">A-</SelectItem>
+                    <SelectItem value="B+">B+</SelectItem>
+                    <SelectItem value="B-">B-</SelectItem>
+                    <SelectItem value="AB+">AB+</SelectItem>
+                    <SelectItem value="AB-">AB-</SelectItem>
+                    <SelectItem value="O+">O+</SelectItem>
+                    <SelectItem value="O-">O-</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </Field>
           </FieldGroup>
         </CardContent>
       </Card>
