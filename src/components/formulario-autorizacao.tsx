@@ -703,6 +703,80 @@ export function FormularioAutorizacao() {
                 </Button>
               </>
             )}
+
+            <Field>
+              <FieldLabel className="text-base font-semibold">
+                Como deverá ser medicado em caso de:
+              </FieldLabel>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-febre">Febre</FieldLabel>
+              <Input
+                id="medicacao-febre"
+                name="medicacaoFebre"
+                placeholder="Ex: Dipirona 500mg, 6/6h"
+                autoComplete="off"
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-dor-cabeca">
+                Dor de cabeça
+              </FieldLabel>
+              <Input
+                id="medicacao-dor-cabeca"
+                name="medicacaoDorCabeca"
+                placeholder="Ex: Paracetamol 750mg, 8/8h"
+                autoComplete="off"
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-dor-garganta">
+                Dor de garganta
+              </FieldLabel>
+              <Input
+                id="medicacao-dor-garganta"
+                name="medicacaoDorGarganta"
+                placeholder="Ex: Benzetacil, conforme orientação médica"
+                autoComplete="off"
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-contusao">
+                Contusão muscular
+              </FieldLabel>
+              <Input
+                id="medicacao-contusao"
+                name="medicacaoContusao"
+                placeholder="Ex: Cataflan gel, 3x ao dia"
+                autoComplete="off"
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-corte">
+                Corte ou arranhão
+              </FieldLabel>
+              <Input
+                id="medicacao-corte"
+                name="medicacaoCorte"
+                placeholder="Ex: Água oxigenada + Band-aid"
+                autoComplete="off"
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="medicacao-diarreia">Diarreia</FieldLabel>
+              <Input
+                id="medicacao-diarreia"
+                name="medicacaoDiarreia"
+                placeholder="Ex: Probiótico, 1 envelope a cada 12h"
+                autoComplete="off"
+              />
+            </Field>
           </FieldGroup>
         </CardContent>
       </Card>
