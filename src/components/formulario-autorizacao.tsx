@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -27,6 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { generatePDF, parseFormData } from "@/lib/generate-pdf";
 
 const UF_STATES = [
   "AC",
@@ -115,7 +116,8 @@ export function FormularioAutorizacao() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(Object.fromEntries(data.entries()));
+    const dados = parseFormData(data);
+    generatePDF(dados);
   }
 
   return (
@@ -358,7 +360,8 @@ export function FormularioAutorizacao() {
         <CardHeader>
           <CardTitle>Dados de Saúde</CardTitle>
           <CardDescription>
-            Informações sobre a saúde do jovem para fins de cuidado durante a atividade.
+            Informações sobre a saúde do jovem para fins de cuidado durante a
+            atividade.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -671,11 +674,7 @@ export function FormularioAutorizacao() {
                           autoComplete="off"
                           value={remedio.nome}
                           onChange={(e) =>
-                            atualizarRemedio(
-                              remedio.id,
-                              "nome",
-                              e.target.value,
-                            )
+                            atualizarRemedio(remedio.id, "nome", e.target.value)
                           }
                         />
                       </Field>
@@ -842,7 +841,7 @@ export function FormularioAutorizacao() {
         <Button type="reset" variant="outline">
           Limpar
         </Button>
-        <Button type="submit">Enviar</Button>
+        <Button type="submit">Gerar documento</Button>
       </div>
     </form>
   );
