@@ -83,6 +83,7 @@ export function FormularioAutorizacao() {
   const [vacinaTetanica, setVacinaTetanica] = React.useState(false);
   const [alergia, setAlergia] = React.useState(false);
   const [restricaoAlimentar, setRestricaoAlimentar] = React.useState(false);
+  const [restricaoExercicios, setRestricaoExercicios] = React.useState(false);
   const [diabetico, setDiabetico] = React.useState(false);
   const [usoInsulina, setUsoInsulina] = React.useState(false);
   const [tratamentoMedico, setTratamentoMedico] = React.useState(false);
@@ -505,6 +506,33 @@ export function FormularioAutorizacao() {
                 <Input
                   id="alergia-qual"
                   name="alergiaQual"
+                  autoComplete="off"
+                />
+              </Field>
+            )}
+
+            <Field>
+              <div className="flex items-center justify-between">
+                <FieldLabel htmlFor="restricao-exercicios">
+                  Possui restrição médica para exercícios físicos?
+                </FieldLabel>
+                <Switch
+                  id="restricao-exercicios"
+                  name="restricaoExercicios"
+                  checked={restricaoExercicios}
+                  onCheckedChange={setRestricaoExercicios}
+                />
+              </div>
+            </Field>
+            {restricaoExercicios && (
+              <Field>
+                <FieldLabel htmlFor="restricao-exercicios-detalhes">
+                  Detalhes da restrição
+                </FieldLabel>
+                <Input
+                  id="restricao-exercicios-detalhes"
+                  name="restricaoExerciciosDetalhes"
+                  placeholder="Descreva a restrição e orientações médicas"
                   autoComplete="off"
                 />
               </Field>
