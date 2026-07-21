@@ -135,49 +135,264 @@ export function generatePDF(dados: DadosFormulario): void {
   const doc = new jsPDF();
   const marginLeft = 20;
   const marginRight = 20;
+  const marginTop = 20;
+  const marginBottom = 20;
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const maxWidth = pageWidth - marginLeft - marginRight;
-  let y = 20;
+  let y = marginTop;
 
-  function addCenteredText(text: string, fontSize: number, lineHeight = 1.5) {
-    doc.setFontSize(fontSize);
-    const lines = doc.splitTextToSize(text, maxWidth);
-    for (const line of lines) {
-      doc.text(line, pageWidth / 2, y, { align: "center" });
-      y += fontSize * 0.3528 * lineHeight;
+  const textColor = { r: 15, g: 23, b: 42 };
+  const secondaryColor = { r: 75, g: 85, b: 99 };
+  const accentColor = { r: 37, g: 99, b: 235 };
+
+  const hotelName = "Hotel Fazenda Villa da Fonte";
+  const tripDates = "25 a 29 de novembro de 2026";
+  const destinationSummary =
+    "Hotel Fazenda Villa da Fonte, estrada do Kinadi número 355, Palmeiras, Suzano/SP";
+
+  function ensureSpace(requiredHeight = 16) {
+    if (y + requiredHeight > pageHeight - marginBottom) {
+      doc.addPage();
+      y = marginTop;
     }
   }
 
-  function addParagraph(text: string, fontSize = 12, lineHeight = 1.5) {
+  function addCenteredText(text: string, fontSize: number, lineHeight = 1.5) {
     doc.setFontSize(fontSize);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
     const lines = doc.splitTextToSize(text, maxWidth);
     for (const line of lines) {
+      ensureSpace(fontSize * lineHeight + 2);
+      doc.text(line, pageWidth / 2, y, { align: "center" });
+      y += fontSize * 0.3528 * lineHeight;
+    }
+    y += 2;
+  }
+
+  function addParagraph(text: string, fontSize = 11, lineHeight = 1.4) {
+    doc.setFontSize(fontSize);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    const lines = doc.splitTextToSize(text, maxWidth);
+    for (const line of lines) {
+      ensureSpace(fontSize * lineHeight);
       doc.text(line, marginLeft, y);
       y += fontSize * 0.3528 * lineHeight;
+    }
+    y += 4;
+  }
+
+  function addSectionTitle(title: string) {
+    ensureSpace(20);
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(accentColor.r, accentColor.g, accentColor.b);
+    doc.text(title, marginLeft, y);
+    y += 7;
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.7);
+    doc.line(marginLeft, y, pageWidth - marginRight, y);
+    y += 10;
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+  }
+
+  function addField(label: string, value: string) {
+    const displayValue = value?.trim() ? value : "—";
+    ensureSpace(20);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(secondaryColor.r, secondaryColor.g, secondaryColor.b);
+    doc.text(label, marginLeft, y);
+    y += 5;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    const lines = doc.splitTextToSize(displayValue, maxWidth);
+    doc.text(lines, marginLeft, y);
+    y += lines.length * 5 + 5;
+  }
+
+  function addAccentField(label: string, value: string) {
+    const primaryValue = value?.trim() ? value : "—";
+    ensureSpace(24);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(secondaryColor.r, secondaryColor.g, secondaryColor.b);
+    doc.text(label, marginLeft, y);
+    y += 4;
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(accentColor.r, accentColor.g, accentColor.b);
+    doc.text(primaryValue, marginLeft, y);
+    y += 12;
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+  }
+
+  function booleanToText(value: boolean) {
+    return value ? "Sim" : "Não";
+  }
+
+  function addSignatureField() {
+    const signatureBlockHeight = 45;
+    const bottomLimit = pageHeight - marginBottom;
+
+    if (y > bottomLimit - signatureBlockHeight) {
+      doc.addPage();
+      y = marginTop;
+    }
+
+    y = bottomLimit - signatureBlockHeight;
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    const city = dados.responsavelCidade?.trim() || "________________________";
+    doc.text(
+      `${city}, ${new Date().getDate()} de ${new Date().toLocaleString("pt-BR", { month: "long" })} de ${new Date().getFullYear()}.`,
+      marginLeft,
+      y,
+    );
+    y += 22;
+
+    const centerX = pageWidth / 2;
+    const lineWidth = 120;
+
+    doc.setDrawColor(textColor.r, textColor.g, textColor.b);
+    doc.setLineWidth(0.5);
+    doc.line(centerX - lineWidth / 2, y, centerX + lineWidth / 2, y);
+    y += 5;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(textColor.r, textColor.g, textColor.b);
+    doc.text("Assinatura do responsável legal", centerX, y, {
+      align: "center",
+    });
+    y += 5;
+
+    if (dados.responsavelNome?.trim()) {
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(secondaryColor.r, secondaryColor.g, secondaryColor.b);
+      doc.text(dados.responsavelNome, centerX, y, { align: "center" });
     }
   }
 
   addCenteredText("Autorização de viagem nacional (menores de idade)", 16);
-  addCenteredText("Jovens do Crisma / Pós Crisma - Paróquia São Pedro", 12);
-  y += 6;
+  addCenteredText(
+    "Jovens do Crisma / Pós Crisma - Paróquia São Pedro",
+    12,
+    1.2,
+  );
 
+  addSectionTitle("Autorização");
+  addField("Uso de imagem", dados.autorizoImagem === "sim" ? "Sim" : "Não");
   addParagraph(
-    `Eu, ${dados.responsavelNome}, de nacionalidade ${dados.responsavelNacionalidade}, portador(a) do RG ${dados.responsavelRg} e CPF ${dados.responsavelCpf},`,
+    `Eu, ${dados.responsavelNome}, autorizo o(a) jovem ${dados.jovemNome} a viajar com destino ao ${hotelName} em Suzano/SP durante o período de ${tripDates}, para participar do encontro de jovens do Crisma/Pós-Crisma da Paróquia São Pedro.`,
+    13,
+    1.6,
   );
-  addParagraph(`domiciliado(a) à ${dados.responsavelEndereco},`);
-  addParagraph(
-    `Nº ${dados.responsavelNumero}, no bairro ${dados.responsavelBairro},`,
+
+  addSignatureField();
+  doc.addPage();
+  y = marginTop;
+
+  addCenteredText("Dados do participante e informações médicas", 14);
+
+  addSectionTitle("Resumo da viagem");
+  addAccentField("Hotel de hospedagem", hotelName);
+  addAccentField("Período", tripDates);
+  addField("Destino oficial", destinationSummary);
+
+  addSectionTitle("Responsável legal");
+  addField("Nome completo", dados.responsavelNome);
+  addField("Nacionalidade", dados.responsavelNacionalidade);
+  addField("RG", dados.responsavelRg);
+  addField("CPF", dados.responsavelCpf);
+  addField(
+    "Endereço",
+    `${dados.responsavelEndereco} • Nº ${dados.responsavelNumero}`,
   );
-  addParagraph(`Cidade ${dados.responsavelCidade} / ${dados.responsavelUf},`);
-  addParagraph(`autorizo o(a) jovem ${dados.jovemNome},`);
-  addParagraph(
-    `nascido(a) na cidade ${dados.jovemCidadeNascimento} / ${dados.jovemEstadoNascimento},`,
+  addField("Bairro", dados.responsavelBairro);
+  addField("Cidade / UF", `${dados.responsavelCidade} / ${dados.responsavelUf}`);
+
+  addSectionTitle("Jovem participante");
+  addField("Nome completo", dados.jovemNome);
+  addField(
+    "Nascimento",
+    `${dados.jovemCidadeNascimento} / ${dados.jovemEstadoNascimento} • ${dados.jovemNascimento}`,
   );
-  addParagraph(`no dia ${dados.jovemNascimento},`);
-  addParagraph(`portador(a) do RG ${dados.jovemRg} e CPF ${dados.jovemCpf},`);
-  addParagraph(
-    "a empreender viagem nacional com destino à Hotel Fazenda Villa da Fonte, estrada do Kinadi número 355, Palmeiras, cidade Suzano/SP, no dia 25 de novembro de 2026, com retorno no dia 29 de novembro de 2026, para participar do encontro de jovens do Crisma/Pós-Crisma da Paróquia São Pedro (Franca/SP).",
+  addField("RG", dados.jovemRg);
+  addField("CPF", dados.jovemCpf);
+
+  addSectionTitle("Cuidados médicos");
+  addField(
+    "Plano de saúde",
+    `${booleanToText(dados.planoSaude)}${dados.planoSaudeQual ? ` — ${dados.planoSaudeQual}` : ""}`,
   );
+  addField(
+    "Problemas de saúde",
+    `${booleanToText(dados.problemaSaude)}${dados.problemaSaudeQual ? ` — ${dados.problemaSaudeQual}` : ""}`,
+  );
+  addField(
+    "Tratamentos em curso",
+    `${booleanToText(dados.tratamento)}${dados.tratamentoQual ? ` — ${dados.tratamentoQual}` : ""}`,
+  );
+  addField(
+    "Propensão a convulsões",
+    `${booleanToText(dados.convulsao)}${dados.convulsaoSituacao ? ` — ${dados.convulsaoSituacao}` : ""}`,
+  );
+  addField(
+    "Vacina anti-tetânica",
+    `${booleanToText(dados.vacinaTetanica)}${dados.vacinaTetanicaQuando ? ` — ${dados.vacinaTetanicaQuando}` : ""}`,
+  );
+  addField(
+    "Alergias",
+    `${booleanToText(dados.alergia)}${dados.alergiaQual ? ` — ${dados.alergiaQual}` : ""}`,
+  );
+  addField(
+    "Restrição alimentar",
+    `${booleanToText(dados.restricaoAlimentar)}${dados.restricaoAlimentarQual ? ` — ${dados.restricaoAlimentarQual}` : ""}`,
+  );
+  addField(
+    "Restrição para exercícios",
+    `${booleanToText(dados.restricaoExercicios)}${dados.restricaoExerciciosDetalhes ? ` — ${dados.restricaoExerciciosDetalhes}` : ""}`,
+  );
+  addField(
+    "Diabético",
+    `${booleanToText(dados.diabetico)}${dados.usoInsulina ? ` — Sim` : ""}`,
+  );
+  if (dados.usoInsulina) {
+    addField("Frequência de insulina", dados.frequenciaInsulina || "—");
+  }
+  addField("Tipo sanguíneo", dados.tipoSanguineo);
+
+  addSectionTitle("Tratamentos e remédios");
+  if (dados.tratamentoMedico && dados.remedios.length) {
+    dados.remedios.forEach((remedio, index) => {
+      addField(
+        `Remédio ${index + 1}`,
+        `${remedio.nome || "Não informado"} • ${
+          remedio.dose || "Dose não informada"
+        } • ${remedio.horario || "Horário não informado"}`,
+      );
+    });
+    addField("Em tratamento médico", "Sim");
+  } else {
+    addField("Em tratamento médico", booleanToText(dados.tratamentoMedico));
+  }
+
+  addSectionTitle("Medicação de emergência");
+  addField("Febre", dados.medicacaoFebre);
+  addField("Dor de cabeça", dados.medicacaoDorCabeca);
+  addField("Dor de garganta", dados.medicacaoDorGarganta);
+  addField("Contusão muscular", dados.medicacaoContusao);
+  addField("Cortes/arranhões", dados.medicacaoCorte);
+  addField("Diarreia", dados.medicacaoDiarreia);
+
+  addSignatureField();
 
   doc.save("autorizacao-viagem.pdf");
 }
