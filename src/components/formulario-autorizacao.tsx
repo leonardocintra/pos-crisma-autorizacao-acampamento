@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -27,6 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { generatePDF, parseFormData } from "@/lib/generate-pdf";
 
 const UF_STATES = [
   "AC",
@@ -57,6 +58,15 @@ const UF_STATES = [
   "SE",
   "TO",
 ] as const;
+
+const FORM_WRAPPER_CLASSES =
+  "flex w-full flex-col gap-6 rounded-[40px] border border-white/20 bg-white/80 p-6 shadow-[0_35px_90px_-40px_rgba(15,23,42,0.85)] backdrop-blur-sm text-slate-900 [&_input]:font-semibold";
+const CARD_CLASSNAME =
+  "overflow-hidden rounded-[28px] border border-slate-200/50 bg-white/95 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.8)] backdrop-blur-sm";
+const CARD_HEADER_CLASSNAME = "space-y-1 pb-2";
+const CARD_TITLE_CLASSNAME = "text-2xl tracking-tight text-slate-900 normal-case";
+const CARD_DESCRIPTION_CLASSNAME = "text-sm text-slate-500";
+const CARD_CONTENT_CLASSNAME = "space-y-6";
 
 function useNumericInput(initial = "", maxLength = 11) {
   const [value, setValue] = React.useState(initial);
@@ -115,19 +125,22 @@ export function FormularioAutorizacao() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(Object.fromEntries(data.entries()));
+    const dados = parseFormData(data);
+    generatePDF(dados);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados dos pais e responsáveis</CardTitle>
-          <CardDescription>
+    <form onSubmit={handleSubmit} className={FORM_WRAPPER_CLASSES}>
+      <Card className={CARD_CLASSNAME}>
+        <CardHeader className={CARD_HEADER_CLASSNAME}>
+          <CardTitle className={CARD_TITLE_CLASSNAME}>
+            Dados dos pais e responsáveis
+          </CardTitle>
+          <CardDescription className={CARD_DESCRIPTION_CLASSNAME}>
             Informações do responsável legal pelo menor.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className={CARD_CONTENT_CLASSNAME}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="responsavel-nome">
@@ -251,14 +264,14 @@ export function FormularioAutorizacao() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados do Jovem</CardTitle>
-          <CardDescription>
+      <Card className={CARD_CLASSNAME}>
+        <CardHeader className={CARD_HEADER_CLASSNAME}>
+          <CardTitle className={CARD_TITLE_CLASSNAME}>Dados do Jovem</CardTitle>
+          <CardDescription className={CARD_DESCRIPTION_CLASSNAME}>
             Informações do jovem que participará da atividade.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className={CARD_CONTENT_CLASSNAME}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="jovem-nome">
@@ -354,14 +367,15 @@ export function FormularioAutorizacao() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dados de Saúde</CardTitle>
-          <CardDescription>
-            Informações sobre a saúde do jovem para fins de cuidado durante a atividade.
+      <Card className={CARD_CLASSNAME}>
+        <CardHeader className={CARD_HEADER_CLASSNAME}>
+          <CardTitle className={CARD_TITLE_CLASSNAME}>Dados de Saúde</CardTitle>
+          <CardDescription className={CARD_DESCRIPTION_CLASSNAME}>
+            Informações sobre a saúde do jovem para fins de cuidado durante a
+            atividade.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className={CARD_CONTENT_CLASSNAME}>
           <FieldGroup>
             <Field>
               <div className="flex items-center justify-between">
@@ -671,11 +685,7 @@ export function FormularioAutorizacao() {
                           autoComplete="off"
                           value={remedio.nome}
                           onChange={(e) =>
-                            atualizarRemedio(
-                              remedio.id,
-                              "nome",
-                              e.target.value,
-                            )
+                            atualizarRemedio(remedio.id, "nome", e.target.value)
                           }
                         />
                       </Field>
@@ -809,14 +819,16 @@ export function FormularioAutorizacao() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Autorização de utilização de imagem</CardTitle>
-          <CardDescription>
+      <Card className={CARD_CLASSNAME}>
+        <CardHeader className={CARD_HEADER_CLASSNAME}>
+          <CardTitle className={CARD_TITLE_CLASSNAME}>
+            Autorização de utilização de imagem
+          </CardTitle>
+          <CardDescription className={CARD_DESCRIPTION_CLASSNAME}>
             Autorizo divulgar imagens e filmes do jovem.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className={CARD_CONTENT_CLASSNAME}>
           <RadioGroup
             name="autorizoImagem"
             defaultValue="sim"
@@ -838,11 +850,11 @@ export function FormularioAutorizacao() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-wrap justify-end gap-3 pt-2">
         <Button type="reset" variant="outline">
           Limpar
         </Button>
-        <Button type="submit">Enviar</Button>
+        <Button type="submit">Gerar documento</Button>
       </div>
     </form>
   );
