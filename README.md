@@ -42,6 +42,7 @@ Os PDFs originais estão em `acampamento/` (fonte histórica) e também em `publ
 
 - Mobile-first, desenhado para 390 px, com barra de navegação inferior e área de toque adequada.
 - Paleta creme, verde-floresta e dourado; Fraunces para títulos e Manrope para o corpo.
+- Tailwind CSS 4 processado via PostCSS (`postcss.config.mjs`), compatível com builds Turbopack e webpack.
 - Detalhes expansíveis usam `<details>/<summary>` nativos: o conteúdo essencial continua acessível sem JavaScript.
 - O protótipo visual foi explorado no OpenDesign e implementado em Next.js 16 + Tailwind CSS 4.
 
