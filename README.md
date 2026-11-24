@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Acampamento Pós-Crisma 2026
 
-## Getting Started
+Guia digital do acampamento das Paróquias São Pedro e Menino Jesus de Praga, de **24 a 29 de novembro de 2026**. Reúne roteiro, jogos e escala da vigia das refeições em um único lugar — sem banco de dados, sem login e sem depender de PDF perdido no WhatsApp.
 
-First, run the development server:
+## Páginas
+
+| Rota | Conteúdo |
+| --- | --- |
+| `/` | Identidade do acampamento, próximos momentos e entradas para as três seções |
+| `/roteiro` | Linha do tempo de 24 a 29/11, celebrações, leitores, cantos e orientações |
+| `/jogos` | Quatro noites temáticas, estações, padrinhos, regras, penalidades e pontuação |
+| `/escala` | Vigia das refeições por dia e por refeição |
+
+## Como rodar
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # build de produção (todas as rotas são estáticas)
+npm run start   # servir o build
+npm run lint    # Biome
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Onde fica o conteúdo
 
-## Learn More
+Todo o conteúdo fica em módulos TypeScript tipados:
 
-To learn more about Next.js, take a look at the following resources:
+- `src/data/schedule.ts` — roteiro, celebrações e orientações.
+- `src/data/games.ts` — noites, estações, equipes, regras e pontuação.
+- `src/data/meal-duty.ts` — escala da vigia e avisos.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para corrigir um horário, nome ou regra, edite o arquivo correspondente. A interface é composta por Server Components; a única ilha de cliente é a navegação que marca a seção ativa.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Os PDFs originais estão em `acampamento/` (fonte histórica) e também em `public/docs/` (links no rodapé do site).
 
-## Deploy on Vercel
+## Design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Mobile-first, desenhado para 390 px, com barra de navegação inferior e área de toque adequada.
+- Paleta creme, verde-floresta e dourado; Fraunces para títulos e Manrope para o corpo.
+- Detalhes expansíveis usam `<details>/<summary>` nativos: o conteúdo essencial continua acessível sem JavaScript.
+- O protótipo visual foi explorado no OpenDesign e implementado em Next.js 16 + Tailwind CSS 4.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Planejamento
+
+A mudança está documentada em `openspec/changes/add-camp-guide-site/`:
+
+- `proposal.md` — problema, escopo e capabilities.
+- `specs/` — contratos de comportamento de visão geral, roteiro, jogos e escala.
+- `design.md` — decisões técnicas.
+- `tasks.md` — plano de implementação.
+
+Valide com:
+
+```bash
+openspec validate add-camp-guide-site
+```
