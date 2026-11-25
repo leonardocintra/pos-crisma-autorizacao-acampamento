@@ -103,6 +103,6 @@ export const dutyWarnings = [
   },
   {
     title: "Vigia é presença",
-    body: "A escala vale para as refeições do dia. Se precisar trocar, combine antes com a pessoa e avise a coordenação.",
+    body: "A escala vale para as refeições e para os turnos da noite. Se precisar trocar, combine antes com a pessoa e avise a coordenação.",
   },
 ];

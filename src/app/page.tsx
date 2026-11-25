@@ -41,8 +41,8 @@ const sections = [
     number: "03",
     title: "Escala",
     description:
-      "Quem fica de vigia em cada refeição, dia por dia, para ninguém ficar de fora ou sobrecarregado.",
-    meta: "5 dias · café, almoço e jantar",
+      "Quem fica de vigia nas refeições e nos turnos da noite, dia por dia, para ninguém ficar de fora ou sobrecarregado.",
+    meta: "12 refeições + 4 noites",
     icon: UtensilsIcon,
     accent: "text-moss",
     tint: "bg-moss/10",

@@ -241,3 +241,12 @@ export function MailIcon(props: IconProps) {
     </Base>
   );
 }
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.5 8.5 0 1 0 10.2 10.2Z" />
+      <path d="M17 4.5v2M16 5.5h2" />
+    </Base>
+  );
+}

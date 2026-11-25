@@ -9,7 +9,7 @@ Guia digital do acampamento das Paróquias São Pedro e Menino Jesus de Praga, d
 | `/` | Identidade do acampamento, próximos momentos e entradas para as três seções |
 | `/roteiro` | Linha do tempo de 24 a 29/11, celebrações, leitores, cantos e orientações |
 | `/jogos` | Quatro noites temáticas, estações, padrinhos, regras, penalidades e pontuação |
-| `/escala` | Vigia das refeições por dia e por refeição |
+| `/escala` | Vigia das refeições e vigia noturna, por dia, refeição e turno |
 
 ## Como rodar
 
@@ -32,7 +32,8 @@ Todo o conteúdo fica em módulos TypeScript tipados:
 
 - `src/data/schedule.ts` — roteiro, celebrações e orientações.
 - `src/data/games.ts` — noites, estações, equipes, regras e pontuação.
-- `src/data/meal-duty.ts` — escala da vigia e avisos.
+- `src/data/meal-duty.ts` — escala da vigia das refeições e avisos.
+- `src/data/night-duty.ts` — turnos da vigia noturna de quarta a sábado.
 
 Para corrigir um horário, nome ou regra, edite o arquivo correspondente. A interface é composta por Server Components; a única ilha de cliente é a navegação que marca a seção ativa.
 

@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   CheckIcon,
   FlameIcon,
+  MoonIcon,
   SunIcon,
   UtensilsIcon,
 } from "@/components/icons";
@@ -18,11 +19,12 @@ import {
   SectionHeading,
 } from "@/components/ui";
 import { dutyWarnings, type MealDuty, mealDuty } from "@/data/meal-duty";
+import { nightDuty, nightDutyInfo } from "@/data/night-duty";
 
 export const metadata: Metadata = {
   title: "Escala",
   description:
-    "Escala da vigia das refeições do Acampamento Pós-Crisma 2026, por dia e por refeição.",
+    "Escala da vigia das refeições e da vigia noturna do Acampamento Pós-Crisma 2026, por dia e por turno.",
 };
 
 const mealStyles: Record<
@@ -42,13 +44,13 @@ export default function EscalaPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Vigia das refeições · 25 a 29 de novembro"
+        eyebrow="Vigia das refeições e da noite · 25 a 29 de novembro"
         title={
           <>
             Escala da <span className="italic text-gold-display">vigia</span>
           </>
         }
-        description="Quem acompanha cada refeição, dia por dia. Confira o seu nome antes de sentar à mesa — e combine qualquer troca com antecedência."
+        description="Quem acompanha cada refeição e cada turno da noite, dia por dia. Confira o seu nome antes de sentar à mesa — e combine qualquer troca com antecedência."
         meta={
           <>
             <MetaChip icon={<CalendarIcon className="h-3.5 w-3.5" />}>
@@ -59,6 +61,9 @@ export default function EscalaPage() {
             </MetaChip>
             <MetaChip icon={<UtensilsIcon className="h-3.5 w-3.5" />}>
               Café, almoço e jantar
+            </MetaChip>
+            <MetaChip icon={<MoonIcon className="h-3.5 w-3.5" />}>
+              4 noites de vigia
             </MetaChip>
           </>
         }
@@ -82,8 +87,29 @@ export default function EscalaPage() {
           </Callout>
         </div>
 
+        <nav
+          aria-label="Seções da escala"
+          className="mt-8 flex flex-wrap gap-2"
+        >
+          <a
+            href="#refeicoes"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-line bg-paper px-4 text-xs font-bold text-forest transition-colors hover:border-forest/30 hover:bg-forest/5"
+          >
+            <UtensilsIcon className="h-3.5 w-3.5" />
+            Refeições
+          </a>
+          <a
+            href="#vigia-noturna"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-line bg-paper px-4 text-xs font-bold text-forest transition-colors hover:border-forest/30 hover:bg-forest/5"
+          >
+            <MoonIcon className="h-3.5 w-3.5" />
+            Vigia noturna
+          </a>
+        </nav>
+
         <div className="mt-10">
           <SectionHeading
+            id="refeicoes"
             eyebrow="Dia a dia"
             title="Quem fica de olho"
             description="Cada cartão reúne as refeições do dia e os responsáveis pela vigia."
@@ -140,17 +166,87 @@ export default function EscalaPage() {
           ))}
         </div>
 
+        <section
+          id="vigia-noturna"
+          className="scroll-offset mt-14 border-t border-line pt-12"
+        >
+          <SectionHeading
+            eyebrow="Depois do jantar"
+            title="Vigia noturna"
+            description={nightDutyInfo.body}
+          />
+
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            {nightDuty.map((day) => (
+              <article
+                key={day.id}
+                className="overflow-hidden rounded-[1.5rem] border border-line bg-paper shadow-card"
+              >
+                <div className="flex items-center gap-4 border-b border-line bg-forest/5 px-5 py-4">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest/10 text-forest">
+                    <MoonIcon className="h-5 w-5" />
+                  </span>
+                  <div className="flex min-w-0 flex-1 items-baseline justify-between gap-3">
+                    <h3 className="text-base font-bold text-forest sm:text-lg">
+                      {day.weekday}
+                    </h3>
+                    <span className="text-xs font-bold tracking-wide text-muted uppercase">
+                      {day.date} · {day.shifts.length} turnos
+                    </span>
+                  </div>
+                </div>
+
+                <ol className="divide-y divide-line">
+                  {day.shifts.map((shift, shiftIndex) => (
+                    <li
+                      key={`${shift.time}-${shiftIndex}`}
+                      className="grid grid-cols-[6.25rem_1fr] gap-3 px-5 py-3.5"
+                    >
+                      <span className="pt-1 font-display text-[0.9375rem] leading-tight text-forest">
+                        {shift.time}
+                      </span>
+                      <div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {shift.people.map((person) => (
+                            <NameChip key={person}>{person}</NameChip>
+                          ))}
+                        </div>
+                        {shift.note ? (
+                          <p className="mt-2 inline-flex items-start gap-1.5 rounded-lg bg-gold-soft/30 px-2.5 py-1.5 text-[0.6875rem] font-semibold leading-relaxed text-[#6f4d12]">
+                            <AlertIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                            {shift.note}
+                          </p>
+                        ) : null}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            <Callout tone="warn" title="Atenção na sexta-feira">
+              O último turno da sexta termina às 3h e é responsável por{" "}
+              <strong>acordar os jovens para a Missa</strong>. Nas outras
+              noites, a vigia segue até as 7h.
+            </Callout>
+          </div>
+        </section>
+
         <div className="mt-10 rounded-[1.5rem] border border-forest/15 bg-forest p-6 text-cream sm:p-8">
           <div className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
-              <Eyebrow>Antes das refeições</Eyebrow>
+              <Eyebrow>Antes de assumir</Eyebrow>
               <h2 className="mt-2 font-display text-2xl sm:text-3xl">
                 A vigia começa antes do primeiro prato.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-cream/75">
                 Chegue alguns minutos antes, confira se os jovens estão todos
-                presentes e combine com a pessoa que assume depois de você. A
-                escala é uma forma de cuidar, não uma formalidade.
+                presentes e combine com a pessoa que assume depois de você. Na
+                noite, o mesmo cuidado: receba o turno, confira o horário e
+                passe a vez. A escala é uma forma de cuidar, não uma
+                formalidade.
               </p>
             </div>
             <Link
@@ -167,7 +263,7 @@ export default function EscalaPage() {
           {[
             [
               "Confira o dia",
-              "A escala muda a cada refeição. Veja o cartão do dia certo.",
+              "A escala muda a cada refeição e a cada turno. Veja o cartão do dia certo.",
             ],
             [
               "Avise a troca",
@@ -189,7 +285,7 @@ export default function EscalaPage() {
         </div>
 
         <p className="mt-10 text-center text-xs leading-relaxed text-muted">
-          Escala da vigia das refeições · Acampamento Pós-Crisma 2026
+          Escala da vigia das refeições e da noite · Acampamento Pós-Crisma 2026
         </p>
       </div>
     </>
